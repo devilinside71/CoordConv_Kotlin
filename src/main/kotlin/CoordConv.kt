@@ -1,3 +1,4 @@
+import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
 
@@ -147,6 +148,68 @@ class CoordConv {
         retVal.Northing = northing.toInt()
         retVal.Easting = easting.toInt()
         println("mgrs2UTM - RETURN $retVal")
+        return retVal
+    }
+
+    fun utm2DEG(coord: UTMData): DEGData {
+        val retVal = GeneralData.emptyDEGData
+        val utmNorthing = coord.Northing
+        val utmEasting = coord.Easting
+        val zoneLetter = coord.ZoneLetter
+        val zoneNumber = coord.ZoneNumber
+        if (zoneNumber < 0) {
+            return retVal
+        }
+        val kZero = 0.9996
+        val ellipRadius = 6378137.0
+        val ellipEccSquared = 0.00669438
+        val e1Val = (1 - Math.sqrt(1 - ellipEccSquared)) / (1 + Math.sqrt(1 - ellipEccSquared))
+        val xValue = utmEasting.toDouble() - 500000.0
+        var yValue = utmNorthing.toDouble()
+        if (zoneLetter.toCharArray()[0].code < "N".toCharArray()[0].code) {
+            yValue -= 10000000.0
+        }
+        println("utm2DEG - yValue $yValue")
+        val lonOrigin = (zoneNumber - 1) * 6 - 180 + 3
+        println("utm2DEG - lonOrigin $lonOrigin")
+        val eccPrimeSquared = ellipEccSquared / (1 - ellipEccSquared)
+        println("utm2DEG - eccPrimeSquared $eccPrimeSquared")
+        val mVal = yValue / kZero
+        println("utm2DEG - mVal $mVal")
+        val muVal = mVal / (ellipRadius * (1 - ellipEccSquared / 4 - 3 * ellipEccSquared *
+                ellipEccSquared / 64 - 5 * ellipEccSquared * ellipEccSquared * ellipEccSquared / 256))
+        println("utm2DEG - muVal $muVal")
+        val phi1Rad =
+            muVal + (3 * e1Val / 2 - 27 * e1Val * e1Val * e1Val / 32) * sin(2 * muVal) + (21 * e1Val * e1Val / 16 - 55 * e1Val * e1Val * e1Val * e1Val / 32) * sin(
+                4 * muVal
+            ) + 151 * e1Val * e1Val * e1Val / 96 * sin(6 * muVal)
+        println ("utm2DEG - phi1Rad $phi1Rad")
+        val vEllipse = 1 - ellipEccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad)
+        println("utm2DEG - vEllipse $vEllipse")
+        val n1Val = ellipRadius / Math.sqrt(vEllipse)
+        println("utm2DEG - n1Val $n1Val")
+        val t1Val = Math.tan(phi1Rad) * Math.tan(phi1Rad)
+        println("utm2DEG - t1Val $t1Val")
+        val c1Val = eccPrimeSquared * Math.cos(phi1Rad) * Math.cos(phi1Rad)
+        println("utm2DEG - c1Val $c1Val")
+        val r1Val = ellipRadius * (1 - ellipEccSquared) / Math.pow(vEllipse, 1.5)
+        println("utm2DEG - r1Val $r1Val")
+        val dVal = xValue / (n1Val * kZero)
+        println("utm2DEG - dVal $dVal")
+        val lat = phi1Rad - (n1Val * tan(phi1Rad) / r1Val) * (dVal * dVal / 2 -
+                (5 + 3 * t1Val + 10 * c1Val - 4 * c1Val * c1Val - 9 * eccPrimeSquared) *
+                dVal * dVal * dVal * dVal / 24 + (61 + 90 * t1Val + 298 * c1Val + 45 *
+                t1Val * t1Val - 252 * eccPrimeSquared - 3 * c1Val * c1Val) * dVal * dVal * dVal * dVal * dVal * dVal / 720)
+        println("utm2DEG - lat $lat")
+        val latDeg = rad2deg(lat)
+        val lon = (dVal - (1 + 2 * t1Val + c1Val) * dVal * dVal * dVal / 6 +
+                (5 - 2 * c1Val + 28 * t1Val - 3 * c1Val * c1Val + 8 * eccPrimeSquared + 24 * t1Val * t1Val) *
+                dVal * dVal * dVal * dVal * dVal / 120) / cos(phi1Rad)
+        println("utm2DEG - lon $lon")
+        val lonDeg = lonOrigin.toDouble() + rad2deg(lon)
+        retVal.Latitude = latDeg
+        retVal.Longitude = lonDeg
+        println("utm2DEG - RETURN $retVal")
         return retVal
     }
 

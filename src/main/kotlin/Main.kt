@@ -30,7 +30,7 @@ fun App() {
         Button(onClick = {
             text = "Hello, Desktop!"
 
-            var testData =coordConv.deg2UTM(degTest01)
+            var testData = coordConv.deg2UTM(degTest01)
             var testStr = coordConv.utmdataToString(testData)
             println("RES01 $testData")
             println("RES01 $testStr")
@@ -38,11 +38,14 @@ fun App() {
             testStr = coordConv.mgrsdataToString(testData2)
             println("RES02 $testData2")
             println("RES02 $testStr")
-            var testData3 =coordConv.mgrs2UTM(testData2)
-            testStr=coordConv.utmdataToString(testData3)
+            var testData3 = coordConv.mgrs2UTM(testData2)
+            testStr = coordConv.utmdataToString(testData3)
             println("RES03 $testData3")
+            println("RES03 $testStr")
+            var testData4 = coordConv.utm2DEG(testData3)
+            testStr=coordConv.degdataToString(testData4)
+            println("RES04 $testData4")
             println("RES04 $testStr")
-
 
 
         }) {
