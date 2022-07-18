@@ -108,6 +108,124 @@ class CoordConv {
         return retVal
     }
 
+    fun mgrs2UTM(coord: MGRSData): UTMData {
+        val retVal = GeneralData.emptyUTMData
+        retVal.ZoneNumber = coord.ZoneNumber
+        retVal.ZoneLetter = coord.ZoneLetter
+        val hunK = coord.ID100kCol + coord.ID100kRow
+        val mgrsSet = get100kSet4Zone(coord.ZoneNumber.toDouble())
+        println("mgrs2UTM - mgrsSet $mgrsSet")
+        val east100k = getEastingFromChar(hunK.substring(0, 1), mgrsSet)
+        println("mgrs2UTM - east100k $east100k")
+        var north100k = getNorthingFromChar(hunK.substring(1, 2), mgrsSet)
+        while (north100k < getMinNorthing(coord.ZoneLetter)) {
+            north100k += 2000000.0
+        }
+        println("mgrs2UTM - north100k $north100k")
+        var separatedEasting = 0.0
+        var separatedNorthing = 0.0
+        var accuracyBonus = 0.0
+        var separatedEastingStr = ""
+        var separatedNorthingStr = ""
+        val tempEasting = coord.Easting.toString().padStart(5, '0').takeLast(coord.Accuracy)
+        val tempNorthing = coord.Northing.toString().padStart(5, '0').takeLast(coord.Accuracy)
+        val coordPart = tempEasting + tempNorthing
+        if (coord.Accuracy > 0) {
+            accuracyBonus = 100000.0 / Math.pow(10.0, coord.Accuracy.toDouble())
+            separatedEastingStr = coordPart.substring(0, coord.Accuracy)
+            separatedEasting = separatedEastingStr.toDouble() * accuracyBonus
+            separatedNorthingStr = coordPart.substring(coord.Accuracy)
+            separatedNorthing = separatedNorthingStr.toDouble() * accuracyBonus
+        }
+        println("mgrs2UTM - accuracyBonus $accuracyBonus")
+        println("mgrs2UTM - separatedEastingStr $separatedEastingStr")
+        println("mgrs2UTM - separatedEasting $separatedEasting")
+        println("mgrs2UTM - separatedNorthingStr $separatedNorthingStr")
+        println("mgrs2UTM - separatedNorthing $separatedNorthing")
+        val easting = separatedEasting + east100k
+        val northing = separatedNorthing + north100k
+        retVal.Northing = northing.toInt()
+        retVal.Easting = easting.toInt()
+        println("mgrs2UTM - RETURN $retVal")
+        return retVal
+    }
+
+    private fun getEastingFromChar(mgrsFirstLetter: String, mgrsSet: Int): Double {
+        var index = mgrsSet - 1
+        var currentColumn = SET_ORIGIN_COLUMN_LETTERS.toCharArray()[index].code
+        println("getEastingFromChar - currentColumn $currentColumn")
+        var eastingValue = 100000.0
+        index = 0
+        while (currentColumn != mgrsFirstLetter.toCharArray()[0].code) {
+            index += 1
+            currentColumn += 1
+            if (currentColumn == VAL_I) {
+                currentColumn += 1
+            }
+            if (currentColumn == VAL_O) {
+                currentColumn += 1
+            }
+            if (currentColumn > VAL_Z) {
+                currentColumn = VAL_A
+            }
+            eastingValue += 100000.0
+        }
+        println("getEastingFromChar - RETURN $eastingValue")
+        return eastingValue
+    }
+
+    private fun getNorthingFromChar(mgrsSecondLetter: String, mgrsSet: Int): Double {
+        println("getNorthingFromChar - mgrsSecondLetter $mgrsSecondLetter")
+        val index = mgrsSet - 1
+        var currentRow = SET_ORIGIN_ROW_LETTERS.toCharArray()[index].code
+        println("getNorthingFromChar - currentRow $currentRow")
+        var northingValue = 0.0
+        while (currentRow != mgrsSecondLetter.toCharArray()[0].code) {
+            currentRow += 1
+            if (currentRow == VAL_I) {
+                currentRow += 1
+            }
+            if (currentRow == VAL_O) {
+                currentRow += 1
+            }
+            if (currentRow > VAL_V) {
+                currentRow = VAL_A
+            }
+            northingValue += 100000.0
+        }
+        println("getNorthingFromChar - RETURN $northingValue")
+        return northingValue
+    }
+
+    private fun getMinNorthing(zoneLetter: String): Double {
+        println("getMinNorthing - zoneLetter $zoneLetter")
+        val retVal: Double
+        val letters: MutableMap<String, Double> = HashMap()
+        letters["C"] = 1100000.0
+        letters["D"] = 2000000.0
+        letters["E"] = 2800000.0
+        letters["F"] = 3700000.0
+        letters["G"] = 4600000.0
+        letters["H"] = 5500000.0
+        letters["J"] = 6400000.0
+        letters["K"] = 7300000.0
+        letters["L"] = 8200000.0
+        letters["M"] = 9100000.0
+        letters["N"] = 0.0
+        letters["P"] = 800000.0
+        letters["Q"] = 1700000.0
+        letters["R"] = 2600000.0
+        letters["S"] = 3500000.0
+        letters["T"] = 4400000.0
+        letters["U"] = 5300000.0
+        letters["V"] = 6200000.0
+        letters["W"] = 7000000.0
+        letters["X"] = 7900000.0
+        retVal = letters[zoneLetter]!!
+        println("getMinNorthing - RETURN $retVal")
+        return retVal
+    }
+
     private fun get100kID(easting: Double, northing: Double, zone_number: Double): String {
         println("get100kID - easting $easting")
         println("get100kID - northing $northing")

@@ -34,10 +34,16 @@ fun App() {
             var testStr = coordConv.utmdataToString(testData)
             println("RES01 $testData")
             println("RES01 $testStr")
-            var testData2 = coordConv.utm2MGRS(coordConv.deg2UTM(degTest01), 4)
+            var testData2 = coordConv.utm2MGRS(coordConv.deg2UTM(degTest01), 5)
             testStr = coordConv.mgrsdataToString(testData2)
             println("RES02 $testData2")
             println("RES02 $testStr")
+            var testData3 =coordConv.mgrs2UTM(testData2)
+            testStr=coordConv.utmdataToString(testData3)
+            println("RES03 $testData3")
+            println("RES04 $testStr")
+
+
 
         }) {
             Text(text)
