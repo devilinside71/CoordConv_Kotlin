@@ -60,7 +60,7 @@ fun App() {
                     println("----------------------------------------")
                     val recognizedCoordinate = coordValidator.recognizedCoord(inputText)
                     println("Recognized: $recognizedCoordinate")
-                    recognizedText=recognizedCoordinate.toString()
+                    recognizedText = recognizedCoordinate.toString()
                     when (recognizedCoordinate) {
                         CoordType.MGRS -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -96,37 +96,40 @@ fun App() {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
                             var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
+                            degText = tempStr2
 
                         }
                         CoordType.SingleDEG -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
                             var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
+                            degText = tempStr2
 
                         }
                         CoordType.DMS -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
                             var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
+                            dmsText = tempStr2
 
                         }
                         CoordType.SingleDMSNoHemisphere -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
                             var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
-
+                            dmsText = tempStr2
                         }
                         CoordType.SingleDMSLatitude -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
                             var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
-
+                            dmsText = tempStr2
                         }
                         CoordType.SingleDMSLongitude -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
                             var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
-
+                            dmsText = tempStr2
                         }
                         else -> { // Note the block
                             mgrsText = GeneralData.naStr
