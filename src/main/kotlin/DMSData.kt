@@ -8,4 +8,13 @@
  *
  * @author Laszlo TAMAS9
  */
-class DMSData(var LatData: DMSCoord, var LonData: DMSCoord)
+data class DMSData(
+    var LatDeg: Int,
+    var LatMin: Int,
+    var LatSec: Double,
+    var LatHemisphere: String,
+    var LonDeg: Int,
+    var LonMin: Int,
+    var LonSec: Double,
+    var LonHemisphere: String
+)

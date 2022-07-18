@@ -1,0 +1,99 @@
+            Button(onClick = {
+//                inputText = "Hello, Desktop!"
+
+                val testData = coordConv.deg2UTM(degTest01)
+                var testStr = coordConv.utmdataToString(testData)
+                println("RES01 $testData")
+                println("RES01 $testStr")
+                val testData2 = coordConv.utm2MGRS(coordConv.deg2UTM(degTest01), 5)
+                testStr = coordConv.mgrsdataToString(testData2)
+                println("RES02 $testData2")
+                println("RES02 $testStr")
+                val testData3 = coordConv.mgrs2UTM(testData2)
+                testStr = coordConv.utmdataToString(testData3)
+                println("RES03 $testData3")
+                println("RES03 $testStr")
+                val testData4 = coordConv.utm2DEG(testData3)
+                testStr = coordConv.degdataToString(testData4)
+                println("RES04 $testData4")
+                println("RES04 $testStr")
+
+                println("Valid MGRS $mgrsStringTest01 >> ${coordValidator.validMGRSString(mgrsStringTest01)}")
+                println("Valid UTM $utmStringTest01 >> ${coordValidator.validUTMString(utmStringTest01)}")
+                println("Valid DEG $degStringTest01 >> ${coordValidator.validDEGString(degStringTest01)}")
+                println(
+                    "Valid SingleDEG $singleDegStringTest01 >> ${
+                        coordValidator.validSingleDegString(
+                            singleDegStringTest01
+                        )
+                    }"
+                )
+                println("Valid DMS $dmsStringTest01 >> ${coordValidator.validDMSString(dmsStringTest01)}")
+                println(
+                    "Valid DMSLat $dmsStringSingleDMSLatitudeTest01 >> ${
+                        coordValidator.validSingleDMSStringLat(
+                            dmsStringSingleDMSLatitudeTest01
+                        )
+                    }"
+                )
+                println(
+                    "Valid DMSLon $dmsStringSingleDMSLongitudeTest01 >> ${
+                        coordValidator.validSingleDMSStringLon(
+                            dmsStringSingleDMSLongitudeTest01
+                        )
+                    }"
+                )
+
+                println("Recognize $degStringTest01 >> ${coordValidator.recognizedCoord(degStringTest01)}")
+                println("Recognize $mgrsStringTest01 >> ${coordValidator.recognizedCoord(mgrsStringTest01)}")
+                println("Recognize $utmStringTest01 >> ${coordValidator.recognizedCoord(utmStringTest01)}")
+                println("Recognize $dmsStringTest01 >> ${coordValidator.recognizedCoord(dmsStringTest01)}")
+                println(
+                    "Recognize $dmsStringSingleDMSNoHemisphereTest01 >> ${
+                        coordValidator.recognizedCoord(
+                            dmsStringSingleDMSNoHemisphereTest01
+                        )
+                    }"
+                )
+                println(
+                    "Recognize $dmsStringSingleDMSLatitudeTest01 >> ${
+                        coordValidator.recognizedCoord(
+                            dmsStringSingleDMSLatitudeTest01
+                        )
+                    }"
+                )
+                println(
+                    "Recognize $dmsStringSingleDMSLongitudeTest01 >> ${
+                        coordValidator.recognizedCoord(
+                            dmsStringSingleDMSLongitudeTest01
+                        )
+                    }"
+                )
+                println("Recognize $singleDegStringTest01 >> ${coordValidator.recognizedCoord(singleDegStringTest01)}")
+
+                val testData5 = coordConv.deg2DMS(degTest01)
+                testStr = coordConv.dmsdataToString(testData5)
+                println("RES05 $testData5")
+                println("RES05 $testStr")
+
+                val testData6 = coordConv.dms2DEG(dmsTest01)
+                testStr = coordConv.degdataToString(testData6)
+                println("RES06 $testData6")
+                println("RES06 $testStr")
+
+                val testData7 = coordConv.deg2MGRS(degTest01)
+                testStr = coordConv.mgrsdataToString(testData7)
+                println("RES07 $testData7")
+                println("RES07 $testStr")
+
+                val testData8 = coordConv.dms2MGRS(dmsTest01)
+                testStr = coordConv.mgrsdataToString(testData8)
+                println("RES08 $testData8")
+                println("RES08 $testStr")
+
+                println("----------------------------------------")
+                val recognizedCoordinate= coordValidator.recognizedCoord(inputText)
+                println("Recognized: $recognizedCoordinate")
+            }) {
+                Text("Convert")
+            }
