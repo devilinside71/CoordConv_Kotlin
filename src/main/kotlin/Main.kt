@@ -71,41 +71,59 @@ fun App() {
                             } else {
                                 mgrsText = GeneralData.naStr
                             }
-                            var degData=coordConv.mgrs2DEG(tempData)
+                            var degData = coordConv.mgrs2DEG(tempData)
                             degText = coordConv.degdataToString(degData)
                             utmText = coordConv.utmdataToString(coordConv.mgrs2UTM(tempData))
                             dmsText = coordConv.dmsdataToString(coordConv.mgrs2DMS(tempData))
-                            latText=degData.Latitude.toString()
-                            lonText=degData.Latitude.toString()
+                            latText = degData.Latitude.toString()
+                            lonText = degData.Longitude.toString()
                         }
                         CoordType.UTM -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmtringToData(tempStr)
+                            var tempData = coordConv.utmstringToData(tempStr)
                             var tempStr2 = coordConv.utmdataToString(tempData)
                             mgrsText = coordConv.mgrsdataToString(coordConv.utm2MGRS(tempData, 5))
-                            var degData=coordConv.utm2DEG(tempData)
+                            var degData = coordConv.utm2DEG(tempData)
                             degText = coordConv.degdataToString(degData)
                             utmText = tempStr2
                             dmsText = coordConv.dmsdataToString(coordConv.utm2DMS(tempData))
-                            latText=degData.Latitude.toString()
-                            lonText=degData.Longitude.toString()
+                            latText = degData.Latitude.toString()
+                            lonText = degData.Longitude.toString()
                         }
                         CoordType.DEG -> {
+                            var tempStr = inputText.replace("\\s+".toRegex(), "")
+                            var tempData = coordConv.utmstringToData(tempStr)
+                            var tempStr2 = coordConv.utmdataToString(tempData)
 
                         }
                         CoordType.SingleDEG -> {
+                            var tempStr = inputText.replace("\\s+".toRegex(), "")
+                            var tempData = coordConv.utmstringToData(tempStr)
+                            var tempStr2 = coordConv.utmdataToString(tempData)
 
                         }
                         CoordType.DMS -> {
+                            var tempStr = inputText.replace("\\s+".toRegex(), "")
+                            var tempData = coordConv.utmstringToData(tempStr)
+                            var tempStr2 = coordConv.utmdataToString(tempData)
 
                         }
-                        CoordType.SingleDMSNoHemisphere->{
+                        CoordType.SingleDMSNoHemisphere -> {
+                            var tempStr = inputText.replace("\\s+".toRegex(), "")
+                            var tempData = coordConv.utmstringToData(tempStr)
+                            var tempStr2 = coordConv.utmdataToString(tempData)
 
                         }
-                        CoordType.SingleDMSLatitude->{
+                        CoordType.SingleDMSLatitude -> {
+                            var tempStr = inputText.replace("\\s+".toRegex(), "")
+                            var tempData = coordConv.utmstringToData(tempStr)
+                            var tempStr2 = coordConv.utmdataToString(tempData)
 
                         }
-                        CoordType.SingleDMSLongitude->{
+                        CoordType.SingleDMSLongitude -> {
+                            var tempStr = inputText.replace("\\s+".toRegex(), "")
+                            var tempData = coordConv.utmstringToData(tempStr)
+                            var tempStr2 = coordConv.utmdataToString(tempData)
 
                         }
                         else -> { // Note the block
@@ -113,6 +131,8 @@ fun App() {
                             degText = GeneralData.naStr
                             utmText = GeneralData.naStr
                             dmsText = GeneralData.naStr
+                            latText = GeneralData.naStr
+                            lonText = GeneralData.naStr
                         }
                     }
                 }) {
@@ -160,6 +180,7 @@ fun App() {
                     value = latText,
                     onValueChange = { latText = it },
                     label = { Text("LAT") }
+
                 )
             }
             Spacer(Modifier.height(10.dp))

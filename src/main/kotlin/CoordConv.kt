@@ -513,7 +513,7 @@ class CoordConv {
         return retVal
     }
 
-    fun utmtringToData(coord: String): UTMData {
+    fun utmstringToData(coord: String): UTMData {
         var retVal = GeneralData.emptyUTMData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternUTM
