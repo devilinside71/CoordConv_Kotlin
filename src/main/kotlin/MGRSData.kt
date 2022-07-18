@@ -8,7 +8,7 @@
  *
  * @author Laszlo TAMAS9
  */
-class MGRSData(
+data class MGRSData(
     var ZoneNumber: Int,
     var ZoneLetter: String,
     var ID100kCol: String,

@@ -91,6 +91,100 @@ class CoordConv {
         return retVal
     }
 
+    fun utm2MGRS(coord: UTMData, accuracy: Int): MGRSData {
+        println("utm2MGRS - coord $coord")
+        val retVal = GeneralData.emptyMGRSData
+        val tempEasting = "00000" + coord.Easting
+        val tempNorthing = "00000" + coord.Northing
+        retVal.ZoneNumber = coord.ZoneNumber
+        retVal.ZoneLetter = coord.ZoneLetter
+        val hunK = get100kID(coord.Easting.toDouble(), coord.Northing.toDouble(), coord.ZoneNumber.toDouble())
+        retVal.ID100kCol = hunK.substring(0, 1)
+        retVal.ID100kRow = hunK.substring(1)
+        retVal.Accuracy = accuracy
+        retVal.Easting = tempEasting.substring(tempEasting.length - 5).substring(0, accuracy).toInt()
+        retVal.Northing = tempNorthing.substring(tempNorthing.length - 5).substring(0, accuracy).toInt()
+        println("utm2MGRS - RETURN $retVal")
+        return retVal
+    }
+
+    private fun get100kID(easting: Double, northing: Double, zone_number: Double): String {
+        println("get100kID - easting $easting")
+        println("get100kID - northing $northing")
+        println("get100kID - zone_number $zone_number")
+        val setParm = get100kSet4Zone(zone_number)
+        println("get100kID - setParm $setParm")
+        val setColumn = Math.floor(easting / 100000)
+        println("get100kID - setColumn $setColumn")
+        val setRow = Math.floor(northing / 100000) % 20
+        println("get100kID - setRow $setRow")
+        val retVal = getLetter100kID(Math.round(setColumn).toInt(), Math.round(setRow).toInt(), setParm)
+        println("get100kID - RETURN $retVal")
+        return retVal
+    }
+
+    private fun get100kSet4Zone(zoneNumber: Double): Int {
+        println("get100kSet4Zone - zoneNumber $zoneNumber")
+        val NUM_100K_SETS = 6
+        var retVal = Math.round(zoneNumber).toInt() % NUM_100K_SETS
+        if (retVal == 0) {
+            retVal = NUM_100K_SETS
+        }
+        println("get100kSet4Zone - RETURN $retVal")
+        return retVal
+    }
+
+    private fun getLetter100kID(column: Int, row: Int, parm: Int): String {
+        println("getLetter100kID - column $column, row $row, parm $parm")
+        val retVal: String
+        val index = parm - 1
+        val colOrigin = SET_ORIGIN_COLUMN_LETTERS.toCharArray()[index].code
+        val rowOrigin = SET_ORIGIN_ROW_LETTERS.toCharArray()[index].code
+        println("getLetter100kID - colOrigin $colOrigin, rowOrigin $rowOrigin")
+        var colInt = colOrigin + column - 1
+        var rowInt = rowOrigin + row
+        println("getLetter100kID - colInt $colInt, rowInt $rowInt")
+        var rollover = false
+        if (colInt > VAL_Z) {
+            colInt = colInt - VAL_Z + VAL_A - 1
+            rollover = true
+        }
+        if (colInt == VAL_I || (colOrigin < VAL_I && colInt > VAL_I) || ((colInt > VAL_I || colOrigin < VAL_I) && rollover)) {
+            colInt += 1
+        }
+        if (colInt == VAL_O || (colOrigin < VAL_O && colInt > VAL_O) || ((colInt > VAL_O || colOrigin < VAL_O) && rollover)) {
+            colInt += 1
+        }
+        if (colInt == VAL_I) {
+            colInt += 1
+        }
+        if (colInt > VAL_Z) {
+            colInt = colInt - VAL_Z + VAL_A - 1
+        }
+        if (rowInt > VAL_V) {
+            rowInt = rowInt - VAL_V + VAL_A - 1
+            rollover = true
+        } else {
+            rollover = false
+        }
+        if (((rowInt == VAL_I) || ((rowOrigin < VAL_I) && (rowInt > VAL_I))) || (((rowInt > VAL_I) || (rowOrigin < VAL_I)) && rollover)) {
+            rowInt += 1
+        }
+        if (((rowInt == VAL_O) || ((rowOrigin < VAL_O) && (rowInt > VAL_O))) || (((rowInt > VAL_O) || (rowOrigin < VAL_O)) && rollover)) {
+            rowInt += 1
+        }
+        if (rowInt == VAL_I) {
+            rowInt += 1
+        }
+        if (rowInt > VAL_V) {
+            rowInt = rowInt - VAL_V + VAL_A - 1
+        }
+        println("getLetter100kID - colInt mod $colInt, rowInt mod $rowInt")
+        retVal = colInt.toChar().toString() + Character.toString(rowInt.toChar())
+        println("getLetter100kID - RETURN $retVal")
+        return retVal
+    }
+
     private fun utmLetterDesignator(lat: Double): String {
         var retVal = "Z"
         if (72 <= lat && lat <= 84) {
@@ -138,4 +232,35 @@ class CoordConv {
         return retVal
     }
 
+    // Data To String
+    fun degdataToString(coord: DEGData): String {
+        return coord.Latitude.toString() + "," + coord.Longitude
+    }
+
+    fun utmdataToString(coord: UTMData): String {
+        return (coord.ZoneNumber.toString() + "," + coord.ZoneLetter + ","
+                + coord.Easting + "," + coord.Northing)
+    }
+
+    fun mgrsdataToString(coord: MGRSData): String {
+        var retVal = ""
+        val tempEasting = coord.Easting.toString().padStart(5, '0').takeLast(coord.Accuracy)
+        val tempNorthing = coord.Northing.toString().padStart(5, '0').takeLast(coord.Accuracy)
+        println("mgrsdataToString - tempEasting $tempEasting tempNorthing $tempNorthing")
+        if (coord.Accuracy >= 0 && coord.Accuracy <= 5) {
+            retVal = (coord.ZoneNumber.toString() + coord.ZoneLetter + coord.ID100kCol
+                    + coord.ID100kRow + tempEasting + tempNorthing)
+        }
+        return retVal
+    }
+
+    companion object {
+        private const val SET_ORIGIN_COLUMN_LETTERS = "AJSAJS"
+        private const val SET_ORIGIN_ROW_LETTERS = "AFAFAF"
+        private const val VAL_A = 65
+        private const val VAL_I = 73
+        private const val VAL_O = 79
+        private const val VAL_V = 86
+        private const val VAL_Z = 90
+    }
 }

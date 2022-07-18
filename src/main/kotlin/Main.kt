@@ -29,14 +29,20 @@ fun App() {
     MaterialTheme {
         Button(onClick = {
             text = "Hello, Desktop!"
-            print(coordConv.deg2UTM(degTest01))
+
+            var testData =coordConv.deg2UTM(degTest01)
+            var testStr = coordConv.utmdataToString(testData)
+            println("RES01 $testData")
+            println("RES01 $testStr")
+            var testData2 = coordConv.utm2MGRS(coordConv.deg2UTM(degTest01), 4)
+            testStr = coordConv.mgrsdataToString(testData2)
+            println("RES02 $testData2")
+            println("RES02 $testStr")
+
         }) {
             Text(text)
         }
     }
-
-
-
 
 
 }
