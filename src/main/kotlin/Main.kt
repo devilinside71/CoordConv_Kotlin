@@ -37,6 +37,7 @@ fun App() {
     var dmsText by remember { mutableStateOf("") }
     var latText by remember { mutableStateOf("") }
     var lonText by remember { mutableStateOf("") }
+    var recognizedText by remember { mutableStateOf("") }
 
 
 
@@ -59,6 +60,7 @@ fun App() {
                     println("----------------------------------------")
                     val recognizedCoordinate = coordValidator.recognizedCoord(inputText)
                     println("Recognized: $recognizedCoordinate")
+                    recognizedText=recognizedCoordinate.toString()
                     when (recognizedCoordinate) {
                         CoordType.MGRS -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -138,6 +140,12 @@ fun App() {
                 }) {
                     Text("Convert")
                 }
+            }
+            Spacer(Modifier.height(10.dp))
+            Row() {
+                Text(
+                    text = recognizedText
+                )
             }
             Spacer(Modifier.height(10.dp))
             Row() {
