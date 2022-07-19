@@ -94,42 +94,92 @@ fun App() {
                         }
                         CoordType.DEG -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmstringToData(tempStr)
-                            var tempStr2 = coordConv.utmdataToString(tempData)
+                            var tempData = coordConv.degstringToData(tempStr)
+                            var tempStr2 = coordConv.degdataToString(tempData)
                             degText = tempStr2
+                            mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(tempData))
+                            utmText = coordConv.utmdataToString(coordConv.deg2UTM(tempData))
+                            dmsText = coordConv.dmsdataToString(coordConv.deg2DMS(tempData))
+                            latText = tempData.Latitude.toString()
+                            lonText = tempData.Longitude.toString()
 
                         }
                         CoordType.SingleDEG -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmstringToData(tempStr)
-                            var tempStr2 = coordConv.utmdataToString(tempData)
+                            var tempData = coordConv.singledegstringToData(tempStr)
+                            var tempStr2 = tempData.toString()
                             degText = tempStr2
+                            mgrsText = GeneralData.naStr
+                            utmText = GeneralData.naStr
+                            dmsText = GeneralData.naStr
+                            latText = GeneralData.naStr
+                            lonText = GeneralData.naStr
 
                         }
                         CoordType.DMS -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmstringToData(tempStr)
-                            var tempStr2 = coordConv.utmdataToString(tempData)
+                            var tempData = coordConv.dmsstringToData(tempStr)
+                            var tempStr2 = coordConv.dmsdataToString(tempData)
                             dmsText = tempStr2
+                            mgrsText = coordConv.mgrsdataToString(coordConv.dms2MGRS(tempData))
+                            utmText = coordConv.utmdataToString(coordConv.dms2UTM(tempData))
+                            var degData = coordConv.dms2DEG(tempData)
+                            degText = coordConv.degdataToString(degData)
+                            latText = degData.Latitude.toString()
+                            lonText = degData.Longitude.toString()
 
                         }
                         CoordType.SingleDMSNoHemisphere -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmstringToData(tempStr)
-                            var tempStr2 = coordConv.utmdataToString(tempData)
+                            var tempData = coordConv.singledmsnohemispherestringToData(tempStr)
+                            var tempStr2 = coordConv.singledmsnohemispheredataToString(tempData)
                             dmsText = tempStr2
+                            var fakeData = GeneralData.emptyDMSData
+                            fakeData.LonHemisphere = "E"
+                            fakeData.LonDeg = tempData.Deg
+                            fakeData.LonMin = tempData.Min
+                            fakeData.LonSec = tempData.Sec
+                            var fakeData2 = coordConv.dms2DEG(fakeData)
+
+                            mgrsText = GeneralData.naStr
+                            utmText = GeneralData.naStr
+                            degText = fakeData2.Longitude.toString()
+                            latText = GeneralData.naStr
+                            lonText = GeneralData.naStr
                         }
                         CoordType.SingleDMSLatitude -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmstringToData(tempStr)
-                            var tempStr2 = coordConv.utmdataToString(tempData)
+                            var tempData = coordConv.singledmsstringToData(tempStr)
+                            var tempStr2 = coordConv.singledmsdataToString(tempData)
                             dmsText = tempStr2
+                            var fakeData = GeneralData.emptyDMSData
+                            fakeData.LatHemisphere = tempData.Hemisphere
+                            fakeData.LatDeg = tempData.Deg
+                            fakeData.LatMin = tempData.Min
+                            fakeData.LatSec = tempData.Sec
+                            var fakeData2 = coordConv.dms2DEG(fakeData)
+                            mgrsText = GeneralData.naStr
+                            utmText = GeneralData.naStr
+                            degText = fakeData2.Latitude.toString()
+                            latText = fakeData2.Latitude.toString()
+                            lonText = GeneralData.naStr
                         }
                         CoordType.SingleDMSLongitude -> {
                             var tempStr = inputText.replace("\\s+".toRegex(), "")
-                            var tempData = coordConv.utmstringToData(tempStr)
-                            var tempStr2 = coordConv.utmdataToString(tempData)
+                            var tempData = coordConv.singledmsstringToData(tempStr)
+                            var tempStr2 = coordConv.singledmsdataToString(tempData)
                             dmsText = tempStr2
+                            var fakeData = GeneralData.emptyDMSData
+                            fakeData.LonHemisphere = tempData.Hemisphere
+                            fakeData.LonDeg = tempData.Deg
+                            fakeData.LonMin = tempData.Min
+                            fakeData.LonSec = tempData.Sec
+                            var fakeData2 = coordConv.dms2DEG(fakeData)
+                            mgrsText = GeneralData.naStr
+                            utmText = GeneralData.naStr
+                            degText = fakeData2.Longitude.toString()
+                            latText = GeneralData.naStr
+                            lonText = fakeData2.Longitude.toString()
                         }
                         else -> { // Note the block
                             mgrsText = GeneralData.naStr

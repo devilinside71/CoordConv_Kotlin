@@ -241,13 +241,15 @@ class CoordConv {
     fun deg2MGRS(coord: DEGData): MGRSData {
         return utm2MGRS(deg2UTM(coord), 5)
     }
-    fun mgrs2DEG(coord: MGRSData):DEGData{
+
+    fun mgrs2DEG(coord: MGRSData): DEGData {
         return utm2DEG(mgrs2UTM(coord))
     }
 
-    fun mgrs2DMS(coord:MGRSData):DMSData{
+    fun mgrs2DMS(coord: MGRSData): DMSData {
         return deg2DMS(mgrs2DEG(coord))
     }
+
     fun dms2DEG(coord: DMSData): DEGData {
         println("deg2DMS - coord $coord")
         var retVal = GeneralData.emptyDEGData
@@ -269,9 +271,10 @@ class CoordConv {
         return deg2UTM(dms2DEG(coord))
     }
 
-    fun utm2DMS(coord:UTMData):DMSData{
+    fun utm2DMS(coord: UTMData): DMSData {
         return deg2DMS(utm2DEG(coord))
     }
+
     fun dms2MGRS(coord: DMSData): MGRSData {
         return deg2MGRS(dms2DEG(coord))
     }
@@ -531,18 +534,193 @@ class CoordConv {
 //                    matcher.group(i)
 //                )
 //            }
-            val temp1 =matcher.group(1).toInt()
-            val temp2 =matcher.group(3).toInt()
-            val temp3 =matcher.group(4).toInt()
-            retVal.ZoneNumber=temp1
-            retVal.ZoneLetter=matcher.group(2)
-            retVal.Easting=temp2
-            retVal.Northing=temp3
+            val temp1 = matcher.group(1).toInt()
+            val temp2 = matcher.group(3).toInt()
+            val temp3 = matcher.group(4).toInt()
+            retVal.ZoneNumber = temp1
+            retVal.ZoneLetter = matcher.group(2)
+            retVal.Easting = temp2
+            retVal.Northing = temp3
+        }
+        println("utmstringToData - RETURN $retVal")
+        return retVal
+    }
+
+    fun degstringToData(coord: String): DEGData {
+        var retVal = GeneralData.emptyDEGData
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternDEG
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+            matchCount++
+            System.out.printf(
+                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+                matcher.group()
+            )
+            for (i in 1..matcher.groupCount()) {
+                System.out.printf(
+                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+                    matcher.group(i)
+                )
+            }
+            val temp1 = matcher.group(1).toDouble()
+            val temp2 = matcher.group(2).toDouble()
+            if (temp1 <= 90.0 && temp1 >= -90.0 && temp2 <= 180.0 && temp2 >= -180.0) {
+                retVal.Latitude = temp1
+                retVal.Longitude = temp2
+            }
+
+        }
+        println("degstringToData - RETURN $retVal")
+        return retVal
+    }
+
+    fun singledegstringToData(coord: String): Double {
+        var retVal = 0.0
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternSingleDEG
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+//            matchCount++
+//            System.out.printf(
+//                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+//                matcher.group()
+//            )
+//            for (i in 1..matcher.groupCount()) {
+//                System.out.printf(
+//                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+//                    matcher.group(i)
+//                )
+//            }
+            val valD1 = matcher.group(1).toDouble()
+            if (valD1 <= 180.0 && valD1 >= -180.0) {
+                retVal = valD1
+            }
         }
         return retVal
     }
 
+    fun dmsstringToData(coord: String): DMSData {
+        var retVal = GeneralData.emptyDMSData
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternDMS
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+//            matchCount++
+//            System.out.printf(
+//                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+//                matcher.group()
+//            )
+//            for (i in 1..matcher.groupCount()) {
+//                System.out.printf(
+//                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+//                    matcher.group(i)
+//                )
+//            }
+            val valD1 = matcher.group(1).toDouble()
+            val valD2 = matcher.group(2).toDouble()
+            val valD3 = matcher.group(3).toDouble()
+            val valD6 = matcher.group(6).toDouble()
+            val valD7 = matcher.group(7).toDouble()
+            val valD8 = matcher.group(8).toDouble()
+            if (valD1 <= 90.0 && valD1 >= -90.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0
+                && valD3 <= 60.0 && valD6 <= 180.0 && valD6 >= -180.0 && valD7 >= 0.0
+                && valD7 <= 60.0 && valD8 >= 0.0 && valD8 <= 60.0
+            ) {
+                retVal.LatHemisphere = matcher.group(5)
+                retVal.LatDeg = valD1.toInt()
+                retVal.LatMin = valD2.toInt()
+                retVal.LatSec = valD3
+                retVal.LonHemisphere = matcher.group(10)
+                retVal.LonDeg = valD6.toInt()
+                retVal.LonMin = valD7.toInt()
+                retVal.LonSec = valD8
+
+            }
+        }
+        return retVal
+    }
+
+    fun singledmsnohemispherestringToData(coord: String): SingleDMSNoHemisphereData {
+        var retVal = GeneralData.emptySingleDMSNoHemisphereData
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternSingleDMSNoHemisphere
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+            matchCount++
+            System.out.printf(
+                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+                matcher.group()
+            )
+            for (i in 1..matcher.groupCount()) {
+                System.out.printf(
+                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+                    matcher.group(i)
+                )
+            }
+            val valD1 = matcher.group(1).toDouble()
+            val valD2 = matcher.group(2).toDouble()
+            val valD3 = matcher.group(3).toDouble()
+            if (valD1 <= 180.0 && valD1 >= -180.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0 && valD3 <= 60.0) {
+                retVal.Deg = valD1.toInt()
+                retVal.Min = valD2.toInt()
+                retVal.Sec = valD3
+            }
+        }
+        return retVal
+    }
+
+    fun singledmsstringToData(coord: String): SingleDMSData {
+        var retVal = GeneralData.emptySingleDMSData
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternSingleDMS
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+            matchCount++
+            System.out.printf(
+                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+                matcher.group()
+            )
+            for (i in 1..matcher.groupCount()) {
+                System.out.printf(
+                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+                    matcher.group(i)
+                )
+            }
+            val valD1 = matcher.group(1).toDouble()
+            val valD2 = matcher.group(2).toDouble()
+            val valD3 = matcher.group(3).toDouble()
+            if (valD1 <= 180.0 && valD1 >= -180.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0 && valD3 <= 60.0) {
+                retVal.Deg = valD1.toInt()
+                retVal.Min = valD2.toInt()
+                retVal.Sec = valD3
+                retVal.Hemisphere = matcher.group(5)
+            }
+        }
+
+        return retVal
+    }
+
     // Data To String
+
+    fun singledmsnohemispheredataToString(coord: SingleDMSNoHemisphereData): String {
+        return coord.Deg.toString() + GeneralData.degChar +
+                coord.Min.toString() + GeneralData.minChar +
+                coord.Sec.toString() + GeneralData.secChar
+    }
+
+    fun singledmsdataToString(coord: SingleDMSData): String {
+        return coord.Deg.toString() + GeneralData.degChar +
+                coord.Min.toString() + GeneralData.minChar +
+                coord.Sec.toString() + GeneralData.secChar +
+                coord.Hemisphere
+    }
+
     fun degdataToString(coord: DEGData): String {
         return coord.Latitude.toString() + "," + coord.Longitude
     }

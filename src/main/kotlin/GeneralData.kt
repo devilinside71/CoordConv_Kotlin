@@ -15,6 +15,8 @@ class GeneralData {
         const val emptyMGRS = ""
         val emptyUTMData = UTMData(0, "", 0, 0)
         val emptyDMSData = DMSData(0, 0, 0.0, "X", 0, 0, 0.0, "X")
+        val emptySingleDMSNoHemisphereData = SingleDMSNoHemisphereData(0, 0, 0.0)
+        val emptySingleDMSData = SingleDMSData(0, 0, 0.0, "")
         val emptyMGRSData = MGRSData(0, "X", "X", "X", 0, 0, 0)
         val naStr = "N/A"
 
@@ -40,6 +42,7 @@ class GeneralData {
 
         // SingleDMSLongitude > 47°29'28.302"W > 1:47, 2:29, 3:28.302, 5:W
         var patternSingleDMSLongitude = Pattern.compile("^([0-9]+)°([0-9]{1,2})\'(([0-9]*[.])?[0-9]+)\"([EW])$")
+        var patternSingleDMS = Pattern.compile("^([0-9]+)°([0-9]{1,2})\'(([0-9]*[.])?[0-9]+)\"([EWNS])$")
 
         // DMS > 47°29'28.302"N,19°6'48.521"E > 1:47, 2:29, 3:28.302, 5:N, 6:19, 7:6, 8: 48.521, 10:E
         var patternDMS =
