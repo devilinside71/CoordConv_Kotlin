@@ -109,7 +109,7 @@ fun App() {
                                 garsText = GeneralData.naStr
                                 georefText = GeneralData.naStr
                                 plusText = GeneralData.naStr
-                                gmapsText =coordConv.deg2GMaps(degData)
+                                gmapsText = coordConv.deg2GMaps(degData)
                                 wazeText = coordConv.deg2Waze(degData)
                                 applemapText = GeneralData.naStr
                             }
@@ -126,7 +126,7 @@ fun App() {
                                 garsText = GeneralData.naStr
                                 georefText = GeneralData.naStr
                                 plusText = GeneralData.naStr
-                                gmapsText =coordConv.deg2GMaps(tempData)
+                                gmapsText = coordConv.deg2GMaps(tempData)
                                 wazeText = coordConv.deg2Waze(tempData)
                                 applemapText = GeneralData.naStr
                             }
