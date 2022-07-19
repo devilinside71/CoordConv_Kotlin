@@ -50,6 +50,7 @@ fun App() {
 
     MaterialTheme {
         Row() {
+            Spacer(Modifier.width(20.dp))
             Column(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
@@ -87,6 +88,12 @@ fun App() {
                                 dmsText = coordConv.dmsdataToString(coordConv.mgrs2DMS(tempData))
                                 latText = degData.Latitude.toString()
                                 lonText = degData.Longitude.toString()
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = coordConv.deg2GMaps(degData)
+                                wazeText = coordConv.deg2Waze(degData)
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.UTM -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -99,6 +106,12 @@ fun App() {
                                 dmsText = coordConv.dmsdataToString(coordConv.utm2DMS(tempData))
                                 latText = degData.Latitude.toString()
                                 lonText = degData.Longitude.toString()
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText =coordConv.deg2GMaps(degData)
+                                wazeText = coordConv.deg2Waze(degData)
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.DEG -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -110,7 +123,12 @@ fun App() {
                                 dmsText = coordConv.dmsdataToString(coordConv.deg2DMS(tempData))
                                 latText = tempData.Latitude.toString()
                                 lonText = tempData.Longitude.toString()
-
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText =coordConv.deg2GMaps(tempData)
+                                wazeText = coordConv.deg2Waze(tempData)
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.SingleDEG -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -122,7 +140,12 @@ fun App() {
                                 dmsText = GeneralData.naStr
                                 latText = GeneralData.naStr
                                 lonText = GeneralData.naStr
-
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = GeneralData.naStr
+                                wazeText = GeneralData.naStr
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.DMS -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -135,7 +158,12 @@ fun App() {
                                 degText = coordConv.degdataToString(degData)
                                 latText = degData.Latitude.toString()
                                 lonText = degData.Longitude.toString()
-
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = coordConv.deg2GMaps(degData)
+                                wazeText = coordConv.deg2Waze(degData)
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.SingleDMSNoHemisphere -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -154,6 +182,12 @@ fun App() {
                                 degText = fakeData2.Longitude.toString()
                                 latText = GeneralData.naStr
                                 lonText = GeneralData.naStr
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = GeneralData.naStr
+                                wazeText = GeneralData.naStr
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.SingleDMSLatitude -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -171,6 +205,12 @@ fun App() {
                                 degText = fakeData2.Latitude.toString()
                                 latText = fakeData2.Latitude.toString()
                                 lonText = GeneralData.naStr
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = GeneralData.naStr
+                                wazeText = GeneralData.naStr
+                                applemapText = GeneralData.naStr
                             }
                             CoordType.SingleDMSLongitude -> {
                                 var tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -188,6 +228,12 @@ fun App() {
                                 degText = fakeData2.Longitude.toString()
                                 latText = GeneralData.naStr
                                 lonText = fakeData2.Longitude.toString()
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = GeneralData.naStr
+                                wazeText = GeneralData.naStr
+                                applemapText = GeneralData.naStr
                             }
                             else -> { // Note the block
                                 mgrsText = GeneralData.naStr
@@ -196,6 +242,12 @@ fun App() {
                                 dmsText = GeneralData.naStr
                                 latText = GeneralData.naStr
                                 lonText = GeneralData.naStr
+                                garsText = GeneralData.naStr
+                                georefText = GeneralData.naStr
+                                plusText = GeneralData.naStr
+                                gmapsText = GeneralData.naStr
+                                wazeText = GeneralData.naStr
+                                applemapText = GeneralData.naStr
                             }
                         }
                     }) {
@@ -263,6 +315,7 @@ fun App() {
 
 
             }
+            Spacer(Modifier.width(20.dp))
             Column(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
@@ -316,6 +369,7 @@ fun App() {
                     )
                 }
             }
+            Spacer(Modifier.width(20.dp))
         }
     }
 

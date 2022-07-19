@@ -151,6 +151,21 @@ class CoordConv {
         return utm2MGRS(deg2UTM(coord), 5)
     }
 
+    fun deg2GMaps(coord: DEGData): String {
+        var retVal = "https://www.google.hu/maps/place/"
+        retVal = retVal + coord.Latitude.toString() + "%2C" +
+                coord.Longitude.toString() + "/@" +
+                coord.Latitude.toString() + "%2C" +
+                coord.Longitude.toString() + ",17z"
+        return retVal
+    }
+
+    fun deg2Waze(coord: DEGData): String {
+        var retVal = "https://ul.waze.com/ul?ll="
+        retVal = retVal + coord.Latitude.toString() + "%2C" +
+                coord.Longitude.toString() + "&navigate=yes"
+        return retVal
+    }
     //endregion
 
     //region From MGRS
