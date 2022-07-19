@@ -6,13 +6,7 @@ import kotlin.math.*
  */
 class CoordConv {
     private val gen = GeneralData()
-    private fun rad2deg(number: Double): Double {
-        return number * 180 / Math.PI
-    }
 
-    private fun deg2rad(number: Double): Double {
-        return number * Math.PI / 180
-    }
 
     //region From DEG
 
@@ -469,7 +463,115 @@ class CoordConv {
 
     //endregion
 
+    //region From SingleDEG
 
+    fun singledegstringToData(coord: String): Double {
+        var retVal = 0.0
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternSingleDEG
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+//            matchCount++
+//            System.out.printf(
+//                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+//                matcher.group()
+//            )
+//            for (i in 1..matcher.groupCount()) {
+//                System.out.printf(
+//                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+//                    matcher.group(i)
+//                )
+//            }
+            val valD1 = matcher.group(1).toDouble()
+            if (valD1 <= 180.0 && valD1 >= -180.0) {
+                retVal = valD1
+            }
+        }
+        return retVal
+    }
+
+    //endregion
+
+    //region From SingleDMS
+    fun singledmsdataToString(coord: SingleDMSData): String {
+        return coord.Deg.toString() + GeneralData.degChar +
+                coord.Min.toString() + GeneralData.minChar +
+                coord.Sec.toString() + GeneralData.secChar +
+                coord.Hemisphere
+    }
+
+    fun singledmsstringToData(coord: String): SingleDMSData {
+        var retVal = GeneralData.emptySingleDMSData
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternSingleDMS
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+            matchCount++
+            System.out.printf(
+                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+                matcher.group()
+            )
+            for (i in 1..matcher.groupCount()) {
+                System.out.printf(
+                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+                    matcher.group(i)
+                )
+            }
+            val valD1 = matcher.group(1).toDouble()
+            val valD2 = matcher.group(2).toDouble()
+            val valD3 = matcher.group(3).toDouble()
+            if (valD1 <= 180.0 && valD1 >= -180.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0 && valD3 <= 60.0) {
+                retVal.Deg = valD1.toInt()
+                retVal.Min = valD2.toInt()
+                retVal.Sec = valD3
+                retVal.Hemisphere = matcher.group(5)
+            }
+        }
+
+        return retVal
+    }
+
+    fun singledmsnohemispheredataToString(coord: SingleDMSNoHemisphereData): String {
+        return coord.Deg.toString() + GeneralData.degChar +
+                coord.Min.toString() + GeneralData.minChar +
+                coord.Sec.toString() + GeneralData.secChar
+    }
+
+    fun singledmsnohemispherestringToData(coord: String): SingleDMSNoHemisphereData {
+        var retVal = GeneralData.emptySingleDMSNoHemisphereData
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternSingleDMSNoHemisphere
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+            matchCount++
+            System.out.printf(
+                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+                matcher.group()
+            )
+            for (i in 1..matcher.groupCount()) {
+                System.out.printf(
+                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+                    matcher.group(i)
+                )
+            }
+            val valD1 = matcher.group(1).toDouble()
+            val valD2 = matcher.group(2).toDouble()
+            val valD3 = matcher.group(3).toDouble()
+            if (valD1 <= 180.0 && valD1 >= -180.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0 && valD3 <= 60.0) {
+                retVal.Deg = valD1.toInt()
+                retVal.Min = valD2.toInt()
+                retVal.Sec = valD3
+            }
+        }
+        return retVal
+    }
+
+    //endregion
+
+    //region Calculations
 
     private fun getEastingFromChar(mgrsFirstLetter: String, mgrsSet: Int): Double {
         var index = mgrsSet - 1
@@ -671,118 +773,15 @@ class CoordConv {
         return retVal
     }
 
-    // String To Data
-
-
-
-
-    fun singledegstringToData(coord: String): Double {
-        var retVal = 0.0
-        val tempStr = coord.replace("\\s+".toRegex(), "")
-        val pattern = GeneralData.patternSingleDEG
-        val matcher = pattern.matcher(tempStr)
-        var matchCount = 0
-        while (matcher.find()) {
-//            matchCount++
-//            System.out.printf(
-//                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
-//                matcher.group()
-//            )
-//            for (i in 1..matcher.groupCount()) {
-//                System.out.printf(
-//                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
-//                    matcher.group(i)
-//                )
-//            }
-            val valD1 = matcher.group(1).toDouble()
-            if (valD1 <= 180.0 && valD1 >= -180.0) {
-                retVal = valD1
-            }
-        }
-        return retVal
+    private fun rad2deg(number: Double): Double {
+        return number * 180 / Math.PI
     }
 
-
-    fun singledmsnohemispherestringToData(coord: String): SingleDMSNoHemisphereData {
-        var retVal = GeneralData.emptySingleDMSNoHemisphereData
-        val tempStr = coord.replace("\\s+".toRegex(), "")
-        val pattern = GeneralData.patternSingleDMSNoHemisphere
-        val matcher = pattern.matcher(tempStr)
-        var matchCount = 0
-        while (matcher.find()) {
-            matchCount++
-            System.out.printf(
-                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
-                matcher.group()
-            )
-            for (i in 1..matcher.groupCount()) {
-                System.out.printf(
-                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
-                    matcher.group(i)
-                )
-            }
-            val valD1 = matcher.group(1).toDouble()
-            val valD2 = matcher.group(2).toDouble()
-            val valD3 = matcher.group(3).toDouble()
-            if (valD1 <= 180.0 && valD1 >= -180.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0 && valD3 <= 60.0) {
-                retVal.Deg = valD1.toInt()
-                retVal.Min = valD2.toInt()
-                retVal.Sec = valD3
-            }
-        }
-        return retVal
+    private fun deg2rad(number: Double): Double {
+        return number * Math.PI / 180
     }
 
-    fun singledmsstringToData(coord: String): SingleDMSData {
-        var retVal = GeneralData.emptySingleDMSData
-        val tempStr = coord.replace("\\s+".toRegex(), "")
-        val pattern = GeneralData.patternSingleDMS
-        val matcher = pattern.matcher(tempStr)
-        var matchCount = 0
-        while (matcher.find()) {
-            matchCount++
-            System.out.printf(
-                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
-                matcher.group()
-            )
-            for (i in 1..matcher.groupCount()) {
-                System.out.printf(
-                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
-                    matcher.group(i)
-                )
-            }
-            val valD1 = matcher.group(1).toDouble()
-            val valD2 = matcher.group(2).toDouble()
-            val valD3 = matcher.group(3).toDouble()
-            if (valD1 <= 180.0 && valD1 >= -180.0 && valD2 >= 0.0 && valD2 <= 60.0 && valD3 >= 0.0 && valD3 <= 60.0) {
-                retVal.Deg = valD1.toInt()
-                retVal.Min = valD2.toInt()
-                retVal.Sec = valD3
-                retVal.Hemisphere = matcher.group(5)
-            }
-        }
-
-        return retVal
-    }
-
-    // Data To String
-
-    fun singledmsnohemispheredataToString(coord: SingleDMSNoHemisphereData): String {
-        return coord.Deg.toString() + GeneralData.degChar +
-                coord.Min.toString() + GeneralData.minChar +
-                coord.Sec.toString() + GeneralData.secChar
-    }
-
-    fun singledmsdataToString(coord: SingleDMSData): String {
-        return coord.Deg.toString() + GeneralData.degChar +
-                coord.Min.toString() + GeneralData.minChar +
-                coord.Sec.toString() + GeneralData.secChar +
-                coord.Hemisphere
-    }
-
-
-
-
+    //endregion
 
     companion object {
         private const val SET_ORIGIN_COLUMN_LETTERS = "AJSAJS"
