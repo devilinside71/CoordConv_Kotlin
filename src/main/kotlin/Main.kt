@@ -70,17 +70,17 @@ fun App() {
                         recognizedText = recognizedCoordinate.toString()
                         when (recognizedCoordinate) {
                             CoordType.MGRS -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
                                 println("tempStr $tempStr")
-                                var tempData = coordConv.mgrsstringToData(tempStr)
+                                val tempData = coordConv.mgrsstringToData(tempStr)
                                 println("tempData $tempData")
-                                var tempStr2 = coordConv.mgrsdataToString(tempData)
+                                val tempStr2 = coordConv.mgrsdataToString(tempData)
                                 if (coordValidator.validMGRSString(tempStr2)) {
                                     mgrsText = tempStr2
                                 } else {
                                     mgrsText = GeneralData.naStr
                                 }
-                                var degData = coordConv.mgrs2DEG(tempData)
+                                val degData = coordConv.mgrs2DEG(tempData)
                                 degText = coordConv.degdataToString(degData)
                                 utmText = coordConv.utmdataToString(coordConv.mgrs2UTM(tempData))
                                 dmsText = coordConv.dmsdataToString(coordConv.mgrs2DMS(tempData))
@@ -92,11 +92,11 @@ fun App() {
                                 wazeText = coordConv.deg2Waze(degData)
                             }
                             CoordType.UTM -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.utmstringToData(tempStr)
-                                var tempStr2 = coordConv.utmdataToString(tempData)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.utmstringToData(tempStr)
+                                val tempStr2 = coordConv.utmdataToString(tempData)
                                 mgrsText = coordConv.mgrsdataToString(coordConv.utm2MGRS(tempData, 5))
-                                var degData = coordConv.utm2DEG(tempData)
+                                val degData = coordConv.utm2DEG(tempData)
                                 degText = coordConv.degdataToString(degData)
                                 utmText = tempStr2
                                 dmsText = coordConv.dmsdataToString(coordConv.utm2DMS(tempData))
@@ -108,9 +108,9 @@ fun App() {
                                 wazeText = coordConv.deg2Waze(degData)
                             }
                             CoordType.DEG -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.degstringToData(tempStr)
-                                var tempStr2 = coordConv.degdataToString(tempData)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.degstringToData(tempStr)
+                                val tempStr2 = coordConv.degdataToString(tempData)
                                 degText = tempStr2
                                 mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(tempData))
                                 utmText = coordConv.utmdataToString(coordConv.deg2UTM(tempData))
@@ -123,9 +123,9 @@ fun App() {
                                 wazeText = coordConv.deg2Waze(tempData)
                             }
                             CoordType.SingleDEG -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.singledegstringToData(tempStr)
-                                var tempStr2 = tempData.toString()
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.singledegstringToData(tempStr)
+                                val tempStr2 = tempData.toString()
                                 degText = tempStr2
                                 mgrsText = GeneralData.naStr
                                 utmText = GeneralData.naStr
@@ -138,13 +138,13 @@ fun App() {
                                 wazeText = GeneralData.naStr
                             }
                             CoordType.DMS -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.dmsstringToData(tempStr)
-                                var tempStr2 = coordConv.dmsdataToString(tempData)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.dmsstringToData(tempStr)
+                                val tempStr2 = coordConv.dmsdataToString(tempData)
                                 dmsText = tempStr2
                                 mgrsText = coordConv.mgrsdataToString(coordConv.dms2MGRS(tempData))
                                 utmText = coordConv.utmdataToString(coordConv.dms2UTM(tempData))
-                                var degData = coordConv.dms2DEG(tempData)
+                                val degData = coordConv.dms2DEG(tempData)
                                 degText = coordConv.degdataToString(degData)
                                 latText = degData.Latitude.toString()
                                 lonText = degData.Longitude.toString()
@@ -154,16 +154,16 @@ fun App() {
                                 wazeText = coordConv.deg2Waze(degData)
                             }
                             CoordType.SingleDMSNoHemisphere -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.singledmsnohemispherestringToData(tempStr)
-                                var tempStr2 = coordConv.singledmsnohemispheredataToString(tempData)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.singledmsnohemispherestringToData(tempStr)
+                                val tempStr2 = coordConv.singledmsnohemispheredataToString(tempData)
                                 dmsText = tempStr2
-                                var fakeData = GeneralData.emptyDMSData
+                                val fakeData = GeneralData.emptyDMSData
                                 fakeData.LonHemisphere = "E"
                                 fakeData.LonDeg = tempData.Deg
                                 fakeData.LonMin = tempData.Min
                                 fakeData.LonSec = tempData.Sec
-                                var fakeData2 = coordConv.dms2DEG(fakeData)
+                                val fakeData2 = coordConv.dms2DEG(fakeData)
 
                                 mgrsText = GeneralData.naStr
                                 utmText = GeneralData.naStr
@@ -176,16 +176,16 @@ fun App() {
                                 wazeText = GeneralData.naStr
                             }
                             CoordType.SingleDMSLatitude -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.singledmsstringToData(tempStr)
-                                var tempStr2 = coordConv.singledmsdataToString(tempData)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.singledmsstringToData(tempStr)
+                                val tempStr2 = coordConv.singledmsdataToString(tempData)
                                 dmsText = tempStr2
-                                var fakeData = GeneralData.emptyDMSData
+                                val fakeData = GeneralData.emptyDMSData
                                 fakeData.LatHemisphere = tempData.Hemisphere
                                 fakeData.LatDeg = tempData.Deg
                                 fakeData.LatMin = tempData.Min
                                 fakeData.LatSec = tempData.Sec
-                                var fakeData2 = coordConv.dms2DEG(fakeData)
+                                val fakeData2 = coordConv.dms2DEG(fakeData)
                                 mgrsText = GeneralData.naStr
                                 utmText = GeneralData.naStr
                                 degText = fakeData2.Latitude.toString()
@@ -197,16 +197,16 @@ fun App() {
                                 wazeText = GeneralData.naStr
                             }
                             CoordType.SingleDMSLongitude -> {
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var tempData = coordConv.singledmsstringToData(tempStr)
-                                var tempStr2 = coordConv.singledmsdataToString(tempData)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.singledmsstringToData(tempStr)
+                                val tempStr2 = coordConv.singledmsdataToString(tempData)
                                 dmsText = tempStr2
-                                var fakeData = GeneralData.emptyDMSData
+                                val fakeData = GeneralData.emptyDMSData
                                 fakeData.LonHemisphere = tempData.Hemisphere
                                 fakeData.LonDeg = tempData.Deg
                                 fakeData.LonMin = tempData.Min
                                 fakeData.LonSec = tempData.Sec
-                                var fakeData2 = coordConv.dms2DEG(fakeData)
+                                val fakeData2 = coordConv.dms2DEG(fakeData)
                                 mgrsText = GeneralData.naStr
                                 utmText = GeneralData.naStr
                                 degText = fakeData2.Longitude.toString()
@@ -218,8 +218,8 @@ fun App() {
                                 wazeText = GeneralData.naStr
                             }
                             CoordType.GEOREF->{
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var degData = coordConv.georef2DEG(tempStr)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val degData = coordConv.georef2DEG(tempStr)
                                 mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(degData))
                                 degText = coordConv.degdataToString(degData)
                                 utmText = coordConv.utmdataToString(coordConv.deg2UTM(degData))
@@ -232,8 +232,8 @@ fun App() {
                                 wazeText = coordConv.deg2Waze(degData)
                             }
                             CoordType.GARS->{
-                                var tempStr = inputText.replace("\\s+".toRegex(), "")
-                                var degData = coordConv.gars2DEG(tempStr)
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val degData = coordConv.gars2DEG(tempStr)
                                 mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(degData))
                                 degText = coordConv.degdataToString(degData)
                                 utmText = coordConv.utmdataToString(coordConv.deg2UTM(degData))

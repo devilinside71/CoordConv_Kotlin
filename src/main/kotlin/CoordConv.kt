@@ -5,13 +5,12 @@ import kotlin.math.*
  * @author Laszlo TAMAS9
  */
 class CoordConv {
-    private val gen = GeneralData()
 
 
     //region From DEG
 
     fun degstringToData(coord: String): DEGData {
-        var retVal = GeneralData.emptyDEGData
+        val retVal = GeneralData.emptyDEGData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternDEG
         val matcher = pattern.matcher(tempStr)
@@ -53,7 +52,7 @@ class CoordConv {
         println("latlon2UTM - latRad $latRad")
         val lonRad = deg2rad(coord.Longitude)
         println("latlon2UTM - lonRad $lonRad")
-        var zoneNumber = Math.floor((coord.Longitude + 180) / 6) + 1
+        var zoneNumber = floor((coord.Longitude + 180) / 6) + 1
         if (coord.Longitude == 180.0) {
             zoneNumber = 60.0
         }
@@ -80,13 +79,13 @@ class CoordConv {
         println("latlon2UTM - lonOriginRad $lonOriginRad")
         val eccPrimeSquared = ellipEccSquared / (1 - ellipEccSquared)
         println("latlon2UTM - eccPrimeSquared $eccPrimeSquared")
-        val nVal = ellipRadius / Math.sqrt(1 - ellipEccSquared * Math.sin(latRad) * Math.sin(latRad))
+        val nVal = ellipRadius / sqrt(1 - ellipEccSquared * sin(latRad) * sin(latRad))
         println("latlon2UTM - nVal $nVal")
-        val tVal = Math.tan(latRad) * Math.tan(latRad)
+        val tVal = tan(latRad) * tan(latRad)
         println("latlon2UTM - tVal $tVal")
-        val cVal = eccPrimeSquared * Math.cos(latRad) * Math.cos(latRad)
+        val cVal = eccPrimeSquared * cos(latRad) * cos(latRad)
         println("latlon2UTM - cVal $cVal")
-        val aVal = Math.cos(latRad) * (lonRad - lonOriginRad)
+        val aVal = cos(latRad) * (lonRad - lonOriginRad)
         println("latlon2UTM - aVal $aVal")
 
         val mVal =
@@ -113,16 +112,16 @@ class CoordConv {
             utmNorthing += 10000000.0
         }
         println("latlon2UTM - utmNorthing $utmNorthing")
-        retVal.Northing = Math.round(Math.floor(utmNorthing + 0.5)).toInt()
-        retVal.Easting = Math.round(Math.floor(utmEasting + 0.5)).toInt()
-        retVal.ZoneNumber = Math.round(zoneNumber).toInt()
+        retVal.Northing = floor(utmNorthing + 0.5).roundToLong().toInt()
+        retVal.Easting = floor(utmEasting + 0.5).roundToLong().toInt()
+        retVal.ZoneNumber = zoneNumber.roundToLong().toInt()
         retVal.ZoneLetter = utmLetterDesignator(coord.Latitude)
         return retVal
     }
 
     fun deg2DMS(coord: DEGData): DMSData {
         println("deg2DMS - coord $coord")
-        var retVal = GeneralData.emptyDMSData
+        val retVal = GeneralData.emptyDMSData
         retVal.LatHemisphere = "N"
         retVal.LonHemisphere = "E"
         if (coord.Latitude < 0) {
@@ -134,14 +133,14 @@ class CoordConv {
         println("deg2DMS - LatHemisphere ${retVal.LatHemisphere}")
         println("deg2DMS - LonHemisphere ${retVal.LonHemisphere}")
         retVal.LatDeg = abs(coord.Latitude.toInt())
-        val latmin = (coord.Latitude - coord.Latitude.toInt().toDouble()).toDouble() * 60.0
+        val latmin = (coord.Latitude - coord.Latitude.toInt().toDouble()) * 60.0
         retVal.LatMin = abs(latmin.toInt())
-        val latsec = (latmin - latmin.toInt().toDouble()).toDouble() * 60.0
+        val latsec = (latmin - latmin.toInt().toDouble()) * 60.0
         retVal.LatSec = abs(latsec * 1000.0).roundToInt() / 1000.0
         retVal.LonDeg = abs(coord.Longitude.toInt())
-        val lonmin = (coord.Longitude - coord.Longitude.toInt().toDouble()).toDouble() * 60.0
+        val lonmin = (coord.Longitude - coord.Longitude.toInt().toDouble()) * 60.0
         retVal.LonMin = abs(lonmin.toInt())
-        val lonsec = (lonmin - lonmin.toInt().toDouble()).toDouble() * 60.0
+        val lonsec = (lonmin - lonmin.toInt().toDouble()) * 60.0
         retVal.LonSec = abs(lonsec * 1000.0).roundToInt() / 1000.0
         println("deg2DMS - RETURN $retVal")
         return retVal
@@ -171,7 +170,7 @@ class CoordConv {
     //region From MGRS
 
     fun mgrsstringToData(coord: String): MGRSData {
-        var retVal = GeneralData.emptyMGRSData
+        val retVal = GeneralData.emptyMGRSData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternMGRS
         val matcher = pattern.matcher(tempStr)
@@ -246,7 +245,7 @@ class CoordConv {
         val tempNorthing = coord.Northing.toString().padStart(5, '0').takeLast(coord.Accuracy)
         val coordPart = tempEasting + tempNorthing
         if (coord.Accuracy > 0) {
-            accuracyBonus = 100000.0 / Math.pow(10.0, coord.Accuracy.toDouble())
+            accuracyBonus = 100000.0 / 10.0.pow(coord.Accuracy.toDouble())
             separatedEastingStr = coordPart.substring(0, coord.Accuracy)
             separatedEasting = separatedEastingStr.toDouble() * accuracyBonus
             separatedNorthingStr = coordPart.substring(coord.Accuracy)
@@ -275,7 +274,7 @@ class CoordConv {
     //region From UTM
 
     fun utmstringToData(coord: String): UTMData {
-        var retVal = GeneralData.emptyUTMData
+        val retVal = GeneralData.emptyUTMData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternUTM
         val matcher = pattern.matcher(tempStr)
@@ -342,7 +341,7 @@ class CoordConv {
         val kZero = 0.9996
         val ellipRadius = 6378137.0
         val ellipEccSquared = 0.00669438
-        val e1Val = (1 - Math.sqrt(1 - ellipEccSquared)) / (1 + Math.sqrt(1 - ellipEccSquared))
+        val e1Val = (1 - sqrt(1 - ellipEccSquared)) / (1 + sqrt(1 - ellipEccSquared))
         val xValue = utmEasting.toDouble() - 500000.0
         var yValue = utmNorthing.toDouble()
         if (zoneLetter.toCharArray()[0].code < "N".toCharArray()[0].code) {
@@ -363,15 +362,15 @@ class CoordConv {
                 4 * muVal
             ) + 151 * e1Val * e1Val * e1Val / 96 * sin(6 * muVal)
         println("utm2DEG - phi1Rad $phi1Rad")
-        val vEllipse = 1 - ellipEccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad)
+        val vEllipse = 1 - ellipEccSquared * sin(phi1Rad) * sin(phi1Rad)
         println("utm2DEG - vEllipse $vEllipse")
-        val n1Val = ellipRadius / Math.sqrt(vEllipse)
+        val n1Val = ellipRadius / sqrt(vEllipse)
         println("utm2DEG - n1Val $n1Val")
-        val t1Val = Math.tan(phi1Rad) * Math.tan(phi1Rad)
+        val t1Val = tan(phi1Rad) * tan(phi1Rad)
         println("utm2DEG - t1Val $t1Val")
-        val c1Val = eccPrimeSquared * Math.cos(phi1Rad) * Math.cos(phi1Rad)
+        val c1Val = eccPrimeSquared * cos(phi1Rad) * cos(phi1Rad)
         println("utm2DEG - c1Val $c1Val")
-        val r1Val = ellipRadius * (1 - ellipEccSquared) / Math.pow(vEllipse, 1.5)
+        val r1Val = ellipRadius * (1 - ellipEccSquared) / vEllipse.pow(1.5)
         println("utm2DEG - r1Val $r1Val")
         val dVal = xValue / (n1Val * kZero)
         println("utm2DEG - dVal $dVal")
@@ -397,7 +396,7 @@ class CoordConv {
     //region From DMS
 
     fun dmsstringToData(coord: String): DMSData {
-        var retVal = GeneralData.emptyDMSData
+        val retVal = GeneralData.emptyDMSData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternDMS
         val matcher = pattern.matcher(tempStr)
@@ -453,7 +452,7 @@ class CoordConv {
 
     fun dms2DEG(coord: DMSData): DEGData {
         println("deg2DMS - coord $coord")
-        var retVal = GeneralData.emptyDEGData
+        val retVal = GeneralData.emptyDEGData
         retVal.Latitude = coord.LatDeg.toDouble() + coord.LatMin / 60.0 + coord.LatSec / 3600.0
         if (coord.LatHemisphere == "S") {
             retVal.Latitude = -1 * retVal.Latitude
@@ -517,7 +516,7 @@ class CoordConv {
     }
 
     fun singledmsstringToData(coord: String): SingleDMSData {
-        var retVal = GeneralData.emptySingleDMSData
+        val retVal = GeneralData.emptySingleDMSData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternSingleDMS
         val matcher = pattern.matcher(tempStr)
@@ -555,7 +554,7 @@ class CoordConv {
     }
 
     fun singledmsnohemispherestringToData(coord: String): SingleDMSNoHemisphereData {
-        var retVal = GeneralData.emptySingleDMSNoHemisphereData
+        val retVal = GeneralData.emptySingleDMSNoHemisphereData
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternSingleDMSNoHemisphere
         val matcher = pattern.matcher(tempStr)
@@ -589,7 +588,7 @@ class CoordConv {
     //region GEOREF
     fun deg2GEOREF(coord: DEGData): String {
         println("deg2GEOREF coord $coord")
-        var retVal = georefLon15(coord.Longitude) +
+        val retVal = georefLon15(coord.Longitude) +
                 georefLat15(coord.Latitude) +
                 georefLon1515(coord.Longitude) +
                 georefLat1515(coord.Latitude) +
@@ -600,7 +599,7 @@ class CoordConv {
     }
 
     fun georef2DEG(coord: String): DEGData {
-        var retVal = DEGData(0.0, 0.0)
+        val retVal = DEGData(0.0, 0.0)
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternGEOREF
         val matcher = pattern.matcher(tempStr)
@@ -617,7 +616,7 @@ class CoordConv {
 //                    matcher.group(i)
 //                )
 //            }
-            var mLength = matcher.group(5).length
+            val mLength = matcher.group(5).length
             if (mLength % 2 == 0) {
                 var lonMulti = 1
                 var latMulti = 1
@@ -653,9 +652,9 @@ class CoordConv {
                 println("georef2DEG lat1Val mod $lat1Val")
                 lat1Val += latMulti * lat2Val
                 println("georef2DEG lat1Val mod2 $lat1Val")
-                var nums = matcher.group(5).take(4)
-                var lon3 = nums.substring(0, 2)
-                var lat3 = nums.substring(2, 4)
+                val nums = matcher.group(5).take(4)
+                val lon3 = nums.substring(0, 2)
+                val lat3 = nums.substring(2, 4)
                 println("georef2DEG nums $lon3 $lat3")
                 var lon4 = lon1Val.toDouble() + lonMulti * (lon3.toDouble() / 60.0)
                 var lat4 = lat1Val.toDouble() + latMulti * (lat3.toDouble() / 60.0)
@@ -678,8 +677,8 @@ class CoordConv {
     fun deg2GARS(coord: DEGData): String {
         println("deg2GARS coord $coord")
         var retVal = ""
-        var lon1 = 180.0 + coord.Longitude
-        var lon2 = ceil(lon1 * 2).toInt().toString().padStart(3, '0').take(3)
+        val lon1 = 180.0 + coord.Longitude
+        val lon2 = ceil(lon1 * 2).toInt().toString().padStart(3, '0').take(3)
 
         println("deg2GARS lon2 $lon2")
         retVal += lon2 + garsLatBand(coord.Latitude) +
@@ -689,7 +688,7 @@ class CoordConv {
 
     fun gars2DEG(coord: String): DEGData {
         println("gars2DEG coord $coord")
-        var retVal = DEGData(0.0, 0.0)
+        val retVal = DEGData(0.0, 0.0)
         val tempStr = coord.replace("\\s+".toRegex(), "")
         val pattern = GeneralData.patternGARS
         val matcher = pattern.matcher(tempStr)
@@ -706,8 +705,8 @@ class CoordConv {
 //                    matcher.group(i)
 //                )
 //            }
-            var lonMatch = matcher.group(1).toDouble()
-            var lon = lonMatch / 2 - 180.0
+            val lonMatch = matcher.group(1).toDouble()
+            val lon = lonMatch / 2 - 180.0
             println("gars2DEG lon $lon")
             val letters01 = "ABCDEFGHJKLMNPQ"
             val letters02 = "ABCDEFGHJKLMNPQRSTUVWXYZ"
@@ -715,7 +714,7 @@ class CoordConv {
             println("gars2DEG where01 $where01")
             val where02 = letters02.indexOf(matcher.group(3))
             println("gars2DEG where02 $where02")
-            var lat = (where01 * 24.0 + where02) / 2.0 - 90.0
+            val lat = (where01 * 24.0 + where02) / 2.0 - 90.0
             val valArr: Array<IntArray> = arrayOf(
                 intArrayOf(0, 0),
                 intArrayOf(1, 0),
@@ -723,9 +722,9 @@ class CoordConv {
                 intArrayOf(0, 0),
                 intArrayOf(0, 1)
             )
-            var quadIndex = matcher.group(4).toInt()
+            val quadIndex = matcher.group(4).toInt()
             println("gars2DEG quadIndex $quadIndex")
-            var tempArr = valArr[quadIndex]
+            val tempArr = valArr[quadIndex]
             println("gars2DEG tempArr $tempArr")
             val extLat = tempArr[0]
             val extLon = tempArr[1]
@@ -744,8 +743,8 @@ class CoordConv {
                 intArrayOf(0, 1),
                 intArrayOf(0, 2),
             )
-            var ninthIndex = matcher.group(5).toInt()
-            var tempArr2 = valArr2[ninthIndex]
+            val ninthIndex = matcher.group(5).toInt()
+            val tempArr2 = valArr2[ninthIndex]
             val extLat2 = tempArr2[0]
             val extLon2 = tempArr2[1]
             println("gars2DEG extLat2 $extLat2 extLon2 $extLon2")
@@ -842,21 +841,21 @@ class CoordConv {
         println("get100kID - zone_number $zone_number")
         val setParm = get100kSet4Zone(zone_number)
         println("get100kID - setParm $setParm")
-        val setColumn = Math.floor(easting / 100000)
+        val setColumn = floor(easting / 100000)
         println("get100kID - setColumn $setColumn")
-        val setRow = Math.floor(northing / 100000) % 20
+        val setRow = floor(northing / 100000) % 20
         println("get100kID - setRow $setRow")
-        val retVal = getLetter100kID(Math.round(setColumn).toInt(), Math.round(setRow).toInt(), setParm)
+        val retVal = getLetter100kID(setColumn.roundToLong().toInt(), setRow.roundToLong().toInt(), setParm)
         println("get100kID - RETURN $retVal")
         return retVal
     }
 
     private fun get100kSet4Zone(zoneNumber: Double): Int {
         println("get100kSet4Zone - zoneNumber $zoneNumber")
-        val NUM_100K_SETS = 6
-        var retVal = Math.round(zoneNumber).toInt() % NUM_100K_SETS
+        val num100kSets = 6
+        var retVal = zoneNumber.roundToLong().toInt() % num100kSets
         if (retVal == 0) {
-            retVal = NUM_100K_SETS
+            retVal = num100kSets
         }
         println("get100kSet4Zone - RETURN $retVal")
         return retVal
@@ -908,7 +907,7 @@ class CoordConv {
             rowInt = rowInt - VAL_V + VAL_A - 1
         }
         println("getLetter100kID - colInt mod $colInt, rowInt mod $rowInt")
-        retVal = colInt.toChar().toString() + Character.toString(rowInt.toChar())
+        retVal = colInt.toChar().toString() + rowInt.toChar().toString()
         println("getLetter100kID - RETURN $retVal")
         return retVal
     }
@@ -996,8 +995,8 @@ class CoordConv {
 
     private fun georefLon1515(longitude: Double): String {
         println("getLon1515 lonDeg $longitude")
-        var tempDeg = abs(longitude.toInt())
-        var tempVal = tempDeg - ((tempDeg.toDouble() / 15).toInt() * 15).toInt()
+        val tempDeg = abs(longitude.toInt())
+        var tempVal = tempDeg - ((tempDeg.toDouble() / 15).toInt() * 15)
         if (longitude < 0) {
             tempVal = 14 - tempVal
         }
@@ -1009,8 +1008,8 @@ class CoordConv {
 
     private fun georefLat1515(latitude: Double): String {
         println("getLat1515 latDeg $latitude")
-        var tempDeg = abs(latitude.toInt())
-        var tempVal = tempDeg - ((tempDeg.toDouble() / 15).toInt() * 15).toInt()
+        val tempDeg = abs(latitude.toInt())
+        var tempVal = tempDeg - ((tempDeg.toDouble() / 15).toInt() * 15)
         if (latitude < 0) {
             tempVal = 14 - tempVal
         }
@@ -1025,8 +1024,7 @@ class CoordConv {
         if (coord < 0) {
             temp = 60.0 - temp
         }
-        var retVal = temp.toInt().toString().padStart(2, '0').take(2)
-        return retVal
+        return temp.toInt().toString().padStart(2, '0').take(2)
     }
 
     private fun georef15ID(deg: Int): String {
@@ -1038,8 +1036,7 @@ class CoordConv {
     private fun georef1515ID(index: Int): String {
         val letters01 = "ABCDEFGHJKLMNPQ"
         val char01 = letters01.toCharArray()[index]
-        val retVal = char01.toString()
-        return retVal
+        return char01.toString()
     }
 
     private fun georef1515IDVal(coord: String): Int {
@@ -1059,8 +1056,7 @@ class CoordConv {
         letters["N"] = 12
         letters["P"] = 13
         letters["Q"] = 14
-        val retVal = letters[coord]!!
-        return retVal
+        return letters[coord]!!
     }
 
     private fun georef15IDVal(coord: String): Int {
@@ -1090,14 +1086,13 @@ class CoordConv {
         letters["X"] = 315
         letters["Y"] = 330
         letters["Z"] = 345
-        val retVal = letters[coord]!!
-        return retVal
+        return letters[coord]!!
     }
 
     private fun garsLatBand(lat: Double): String {
         println("garsLatBand lat $lat")
         var retVal = ""
-        var tempLatMin = (90.0 + lat) * 2
+        val tempLatMin = (90.0 + lat) * 2
         println("garsLatBand tempLatMin $tempLatMin")
 
         val letters01 = "ABCDEFGHJKLMNPQ"
@@ -1118,8 +1113,8 @@ class CoordConv {
     private fun garsQudrant(coord: DEGData): Int {
         println("garsQudrant coord $coord")
         var retVal = 0
-        var tempLatMin = (90.0 + coord.Latitude) * 2
-        var tempLonMin = (180.0 + coord.Longitude) * 2
+        val tempLatMin = (90.0 + coord.Latitude) * 2
+        val tempLonMin = (180.0 + coord.Longitude) * 2
         println("garsQudrant tempLatMin $tempLatMin tempLonMin $tempLonMin")
         val quadLat = ((tempLatMin - tempLatMin.toInt()) * 2).toInt()
         val quadLon = ((tempLonMin - tempLonMin.toInt()) * 2).toInt()
@@ -1135,8 +1130,8 @@ class CoordConv {
 
     private fun garsNinth(coord: DEGData): Int {
         var retVal = 0
-        var tempLatMin = (90.0 + coord.Latitude) * 2
-        var tempLonMin = (180.0 + coord.Longitude) * 2
+        val tempLatMin = (90.0 + coord.Latitude) * 2
+        val tempLonMin = (180.0 + coord.Longitude) * 2
         val valArr: Array<IntArray> = arrayOf(
             intArrayOf(7, 8, 9, 7, 8, 9),
             intArrayOf(4, 5, 6, 4, 5, 6),
