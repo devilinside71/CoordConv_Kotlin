@@ -254,33 +254,89 @@ class CoordValidator {
         return retVal
     }
 
+    fun validGEOREF(coord: String): Boolean {
+        var retVal = false
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternGEOREF
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+//            matchCount++
+//            System.out.printf(
+//                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+//                matcher.group()
+//            )
+//            for (i in 1..matcher.groupCount()) {
+//                System.out.printf(
+//                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+//                    matcher.group(i)
+//                )
+//            }
+
+            retVal = true
+
+        }
+        return retVal
+    }
+
+    fun validGARS(coord: String): Boolean {
+        var retVal = false
+        val tempStr = coord.replace("\\s+".toRegex(), "")
+        val pattern = GeneralData.patternGARS
+        val matcher = pattern.matcher(tempStr)
+        var matchCount = 0
+        while (matcher.find()) {
+//            matchCount++
+//            System.out.printf(
+//                "Match count: %s, Group Zero Text: '%s'%n", matchCount,
+//                matcher.group()
+//            )
+//            for (i in 1..matcher.groupCount()) {
+//                System.out.printf(
+//                    "Capture Group Number: %s, Captured Text: '%s'%n", i,
+//                    matcher.group(i)
+//                )
+//            }
+
+            retVal = true
+
+        }
+        return retVal
+    }
+
     fun recognizedCoord(coord: String): CoordType {
         var retVal = CoordType.Unknown
         val tempStr = coord.replace("\\s+".toRegex(), "")
         println("String to recognize: $tempStr")
-        if (validMGRSString(tempStr)){
-            retVal=CoordType.MGRS
+        if (validMGRSString(tempStr)) {
+            retVal = CoordType.MGRS
         }
-        if (validUTMString(tempStr)){
-            retVal=CoordType.UTM
+        if (validUTMString(tempStr)) {
+            retVal = CoordType.UTM
         }
-        if (validDEGString(tempStr)){
-            retVal=CoordType.DEG
+        if (validDEGString(tempStr)) {
+            retVal = CoordType.DEG
         }
-        if (validSingleDegString(tempStr)){
-            retVal=CoordType.SingleDEG
+        if (validSingleDegString(tempStr)) {
+            retVal = CoordType.SingleDEG
         }
-        if (validDMSString(tempStr)){
-            retVal=CoordType.DMS
+        if (validDMSString(tempStr)) {
+            retVal = CoordType.DMS
         }
-        if (validSingleDMSStringLat(tempStr)){
-            retVal=CoordType.SingleDMSLatitude
+        if (validSingleDMSStringLat(tempStr)) {
+            retVal = CoordType.SingleDMSLatitude
         }
-        if (validSingleDMSStringLon(tempStr)){
-            retVal=CoordType.SingleDMSLongitude
+        if (validSingleDMSStringLon(tempStr)) {
+            retVal = CoordType.SingleDMSLongitude
         }
-        if (validSingleDMSStringNoHemisphere(tempStr)){
-            retVal=CoordType.SingleDMSNoHemisphere
+        if (validSingleDMSStringNoHemisphere(tempStr)) {
+            retVal = CoordType.SingleDMSNoHemisphere
+        }
+        if (validGEOREF(tempStr)) {
+            retVal = CoordType.GEOREF
+        }
+        if (validGARS(tempStr)) {
+            retVal = CoordType.GARS
         }
         return retVal
     }
