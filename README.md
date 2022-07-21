@@ -1,5 +1,9 @@
 # CoordConv_Kotlin
 
+## TODO
+
+ToMGRS:
+Accuracy, optional parameter?
 
 ## References
 
