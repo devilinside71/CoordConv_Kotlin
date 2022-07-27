@@ -15,20 +15,20 @@ import androidx.compose.ui.window.application
 @Composable
 @Preview
 fun App() {
-    val coordConv = CoordConv()
-    val coordValidator = CoordValidator()
-    val degStringTest01 = "16.707746,-2.986502"
-    val degTest01 = DEGData(16.707746, -2.986502)
-    val mgrsStringTest01 = "30QWD0143947225"
-    val mgrsTest01 = MGRSData(30, "Q", "W", "D", 1439, 47225, 5)
-    val utmStringTest01 = "30,Q,501439,1847225"
-    val utmTest01 = UTMData(30, "Q", 501439, 1847225)
-    val dmsStringTest01 = "16°42'27.89\"N,2°59'11.41\"W"
-    val dmsStringSingleDMSNoHemisphereTest01 = "16°42'27.89\""
-    val dmsStringSingleDMSLatitudeTest01 = "16°42'27.89\"N"
-    val dmsStringSingleDMSLongitudeTest01 = "2°59'11.41\"W"
-    val dmsTest01 = DMSData(16, 42, 27.89, "N", 2, 59, 11.41, "W")
-    val singleDegStringTest01 = "16.707746"
+//    val coordConv = CoordConv()
+//    val coordValidator = CoordValidator()
+//    val degStringTest01 = "16.707746,-2.986502"
+//    val degTest01 = DEGData(16.707746, -2.986502)
+//    val mgrsStringTest01 = "30QWD0143947225"
+//    val mgrsTest01 = MGRSData(30, "Q", "W", "D", 1439, 47225, 5)
+//    val utmStringTest01 = "30,Q,501439,1847225"
+//    val utmTest01 = UTMData(30, "Q", 501439, 1847225)
+//    val dmsStringTest01 = "16°42'27.89\"N,2°59'11.41\"W"
+//    val dmsStringSingleDMSNoHemisphereTest01 = "16°42'27.89\""
+//    val dmsStringSingleDMSLatitudeTest01 = "16°42'27.89\"N"
+//    val dmsStringSingleDMSLongitudeTest01 = "2°59'11.41\"W"
+//    val dmsTest01 = DMSData(16, 42, 27.89, "N", 2, 59, 11.41, "W")
+//    val singleDegStringTest01 = "16.707746"
 
     var inputText by remember { mutableStateOf("") }
     var mgrsText by remember { mutableStateOf("") }
@@ -43,6 +43,10 @@ fun App() {
     var georefText by remember { mutableStateOf("") }
     var gmapsText by remember { mutableStateOf("") }
     var wazeText by remember { mutableStateOf("") }
+
+    var secondInputText by remember { mutableStateOf("") }
+    var secondRecognizedText by remember { mutableStateOf("") }
+    var coordDistanceText by remember { mutableStateOf("") }
 
 
 
@@ -63,11 +67,11 @@ fun App() {
                     Button({
                         val coordConv = CoordConv()
                         val coordValidator = CoordValidator()
-                        var mgrs: String
                         println("----------------------------------------")
                         val recognizedCoordinate = coordValidator.recognizedCoord(inputText)
                         println("Recognized: $recognizedCoordinate")
                         recognizedText = recognizedCoordinate.toString()
+                        var firstTempDEG = DEGData(0.0,0.0)
                         when (recognizedCoordinate) {
                             CoordType.MGRS -> {
                                 val tempStr = inputText.replace("\\s+".toRegex(), "")
@@ -81,6 +85,8 @@ fun App() {
                                     mgrsText = GeneralData.naStr
                                 }
                                 val degData = coordConv.mgrs2DEG(tempData)
+                                firstTempDEG = degData
+                                println("1 $firstTempDEG")
                                 degText = coordConv.degdataToString(degData)
                                 utmText = coordConv.utmdataToString(coordConv.mgrs2UTM(tempData))
                                 dmsText = coordConv.dmsdataToString(coordConv.mgrs2DMS(tempData))
@@ -97,6 +103,7 @@ fun App() {
                                 val tempStr2 = coordConv.utmdataToString(tempData)
                                 mgrsText = coordConv.mgrsdataToString(coordConv.utm2MGRS(tempData, 5))
                                 val degData = coordConv.utm2DEG(tempData)
+                                firstTempDEG = degData
                                 degText = coordConv.degdataToString(degData)
                                 utmText = tempStr2
                                 dmsText = coordConv.dmsdataToString(coordConv.utm2DMS(tempData))
@@ -111,6 +118,7 @@ fun App() {
                                 val tempStr = inputText.replace("\\s+".toRegex(), "")
                                 val tempData = coordConv.degstringToData(tempStr)
                                 val tempStr2 = coordConv.degdataToString(tempData)
+                                firstTempDEG = tempData
                                 degText = tempStr2
                                 mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(tempData))
                                 utmText = coordConv.utmdataToString(coordConv.deg2UTM(tempData))
@@ -145,6 +153,7 @@ fun App() {
                                 mgrsText = coordConv.mgrsdataToString(coordConv.dms2MGRS(tempData))
                                 utmText = coordConv.utmdataToString(coordConv.dms2UTM(tempData))
                                 val degData = coordConv.dms2DEG(tempData)
+                                firstTempDEG = degData
                                 degText = coordConv.degdataToString(degData)
                                 latText = degData.Latitude.toString()
                                 lonText = degData.Longitude.toString()
@@ -217,9 +226,10 @@ fun App() {
                                 gmapsText = GeneralData.naStr
                                 wazeText = GeneralData.naStr
                             }
-                            CoordType.GEOREF->{
+                            CoordType.GEOREF -> {
                                 val tempStr = inputText.replace("\\s+".toRegex(), "")
                                 val degData = coordConv.georef2DEG(tempStr)
+                                firstTempDEG = degData
                                 mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(degData))
                                 degText = coordConv.degdataToString(degData)
                                 utmText = coordConv.utmdataToString(coordConv.deg2UTM(degData))
@@ -231,9 +241,10 @@ fun App() {
                                 gmapsText = coordConv.deg2GMaps(degData)
                                 wazeText = coordConv.deg2Waze(degData)
                             }
-                            CoordType.GARS->{
+                            CoordType.GARS -> {
                                 val tempStr = inputText.replace("\\s+".toRegex(), "")
                                 val degData = coordConv.gars2DEG(tempStr)
+                                firstTempDEG = degData
                                 mgrsText = coordConv.mgrsdataToString(coordConv.deg2MGRS(degData))
                                 degText = coordConv.degdataToString(degData)
                                 utmText = coordConv.utmdataToString(coordConv.deg2UTM(degData))
@@ -258,6 +269,63 @@ fun App() {
                                 wazeText = GeneralData.naStr
                             }
                         }
+
+                        // Second coordinate to DEG
+                        val secondRecognizedCoordinate = coordValidator.recognizedCoord(secondInputText)
+                        println("Second coordinate recognized: $secondRecognizedCoordinate")
+                        secondRecognizedText = secondRecognizedCoordinate.toString()
+                        val secondTempDEG: DEGData
+                        when (secondRecognizedCoordinate) {
+                            CoordType.MGRS -> {
+                                val tempStrX = secondInputText.replace("\\s+".toRegex(), "")
+                                println("second tempStr $tempStrX")
+                                val tempDataX = coordConv.mgrsstringToData(tempStrX)
+                                println("second tempData $tempDataX")
+                                secondTempDEG = coordConv.mgrs2DEG(tempDataX)
+                                println("2 secondTempDEG $secondTempDEG")
+                                firstTempDEG=coordConv.degstringToData(degText)
+                                println("2 firstTempDEG $firstTempDEG")
+                                coordDistanceText = coordConv.getDistance(firstTempDEG, secondTempDEG).toString()
+                            }
+                            CoordType.UTM -> {
+                                val tempStr = secondInputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.utmstringToData(tempStr)
+                                coordConv.utmdataToString(tempData)
+                                secondTempDEG = coordConv.utm2DEG(tempData)
+                                coordDistanceText = coordConv.getDistance(firstTempDEG, secondTempDEG).toString()
+                            }
+                            CoordType.DEG -> {
+                                val tempStr = secondInputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.degstringToData(tempStr)
+                                coordConv.degdataToString(tempData)
+                                secondTempDEG = tempData
+                                coordDistanceText = coordConv.getDistance(firstTempDEG, secondTempDEG).toString()
+                            }
+                            CoordType.DMS -> {
+                                val tempStr = secondInputText.replace("\\s+".toRegex(), "")
+                                val tempData = coordConv.dmsstringToData(tempStr)
+                                coordConv.dmsdataToString(tempData)
+                                val degData = coordConv.dms2DEG(tempData)
+                                secondTempDEG = degData
+                                coordDistanceText = coordConv.getDistance(firstTempDEG, secondTempDEG).toString()
+                            }
+                            CoordType.GEOREF -> {
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val degData = coordConv.georef2DEG(tempStr)
+                                secondTempDEG = degData
+                                coordDistanceText = coordConv.getDistance(firstTempDEG, secondTempDEG).toString()
+                            }
+                            CoordType.GARS -> {
+                                val tempStr = inputText.replace("\\s+".toRegex(), "")
+                                val degData = coordConv.gars2DEG(tempStr)
+                                secondTempDEG = degData
+                                coordDistanceText = coordConv.getDistance(firstTempDEG, secondTempDEG).toString()
+                            }
+                            else -> { // Note the block
+                                coordDistanceText = GeneralData.naStr
+                            }
+                        }
+
                     }) {
                         Text("Convert")
                     }
@@ -360,6 +428,25 @@ fun App() {
                         label = { Text("Waze") }
                     )
                 }
+                Spacer(Modifier.height(10.dp))
+                Row() {
+                    TextField(
+                        value = secondInputText,
+                        onValueChange = { secondInputText = it },
+                        label = { Text("Second coord ") }
+                    )
+                }
+                Row() {
+                    Text(
+                        text = secondRecognizedText
+                    )
+                }
+                Row() {
+                    Text(
+                        text = coordDistanceText
+                    )
+                }
+
 
             }
             Spacer(Modifier.width(20.dp))

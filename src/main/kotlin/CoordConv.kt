@@ -618,8 +618,8 @@ class CoordConv {
 //            }
             val mLength = matcher.group(5).length
             if (mLength % 2 == 0) {
-                var lonMulti = 1
-                var latMulti = 1
+                var lonMulti: Int
+                var latMulti: Int
                 val lon1 = matcher.group(1)
                 var lon1Val = georef15IDVal(lon1)
                 println("georef2DEG lon1Val $lon1Val")
@@ -756,6 +756,23 @@ class CoordConv {
 
 
     //endregion
+
+    fun getDistance(firstDEG: DEGData, secondDEG: DEGData): Double {
+//        val firstDEG=DEGData(0.0,0.0)
+//        val secondDEG=DEGData(0.0,0.0)
+//        firstDEG.Latitude = 47.49119
+//        firstDEG.Longitude = 19.11348
+//        secondDEG.Latitude = 47.16352
+//        secondDEG.Longitude = 17.96993
+        println("getDistance $firstDEG")
+        println("getDistance $secondDEG")
+        // =ACOS(COS(RADIANS(90-$B$2)) * COS(RADIANS(90-D5)) + SIN(RADIANS(90-$B$2)) * SIN(RADIANS(90-D5)) * COS(RADIANS($C$2-E5))) * 6378137
+        return acos(
+            cos(deg2rad(90.0 - secondDEG.Latitude)) * cos(deg2rad(90.0 - firstDEG.Latitude)) +
+                    sin(deg2rad(90.0 - secondDEG.Latitude)) * sin(deg2rad(90.0 - firstDEG.Latitude)) *
+                    cos(deg2rad(secondDEG.Longitude - firstDEG.Longitude))
+        ) * 6378137.0
+    }
 
     //region Calculations
 
@@ -1091,7 +1108,7 @@ class CoordConv {
 
     private fun garsLatBand(lat: Double): String {
         println("garsLatBand lat $lat")
-        var retVal = ""
+        val retVal: String
         val tempLatMin = (90.0 + lat) * 2
         println("garsLatBand tempLatMin $tempLatMin")
 
@@ -1112,7 +1129,7 @@ class CoordConv {
 
     private fun garsQudrant(coord: DEGData): Int {
         println("garsQudrant coord $coord")
-        var retVal = 0
+        val retVal: Int
         val tempLatMin = (90.0 + coord.Latitude) * 2
         val tempLonMin = (180.0 + coord.Longitude) * 2
         println("garsQudrant tempLatMin $tempLatMin tempLonMin $tempLonMin")
@@ -1129,7 +1146,7 @@ class CoordConv {
     }
 
     private fun garsNinth(coord: DEGData): Int {
-        var retVal = 0
+        val retVal: Int
         val tempLatMin = (90.0 + coord.Latitude) * 2
         val tempLonMin = (180.0 + coord.Longitude) * 2
         val valArr: Array<IntArray> = arrayOf(
